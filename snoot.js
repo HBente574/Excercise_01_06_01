@@ -35,6 +35,7 @@ function setUpDays() {
 
 // function to inspect custom check box on message change
 function autoCheckCustom() {
+    alert("autoCheckCustom function is called");
     var messageBox = document.getElementById("customText");
     // textarea has message, check the box
     if (messageBox.value !== "" && messageBox.value !== messageBox.placeholder) {
@@ -83,7 +84,6 @@ function validateAddress(fieldsetId) {
             currentElement = inputElements[i];
             // blanks
             if (currentElement.value === "") {
-                // debugger;
                 currentElement.style.background = "rgb(255,233,233)";
                 fieldsetValidity = false;
             }
@@ -104,10 +104,10 @@ function validateAddress(fieldsetId) {
             // action for invalif fieldset
             if (fieldsetValidity === false) {
                 if (fieldsetId === "billingAddress") {
-                    throw "Please complete all billing address informtation."
+                    throw "Please complete all billing address informtation.";
                 }
                 else {
-                    throw "Please complete all delivery address informtation."
+                    throw "Please complete all delivery address informtation.";
                 }
             }
         else {
@@ -122,27 +122,28 @@ function validateAddress(fieldsetId) {
         formValidity = false;
     }
 }
-
+//  alert("this function successfully was called and ran up until here")
 
 // function to validate delivery date
 function validateDeliveryDate() {
-    // alert("this function successfully was called and ran up until here")
     var selectElements = document.querySelectorAll("#deliveryDate" + " select");
     var errorDiv = document.querySelectorAll("#deliveryDate" + " .errorMessage")[0];
     var fieldsetValidity = true;
     var elementCount = selectElements.length;
     var currentElement;
+       
     try {
         
         // loop thru the select fields looking for blanks
         for (var i = 0; i < elementCount; i++) {
-            
+    
             currentElement = selectElements[i];
             // blanks
             if (currentElement.selectedIndex === -1) {
                 // debugger;
                 currentElement.style.border = "1px solid red";
                 fieldsetValidity = false;
+        
             }
             // not blanks
             else {
@@ -160,15 +161,16 @@ function validateDeliveryDate() {
         }
             // action for invalid fieldset
             if (fieldsetValidity === false) {
-                    throw "Please specify a delivery date."
+               // alert("if message for throw message");
+                throw "Please specify a delivery date.";
             }
-        else {
-            errorDiv.style.display = "none";
-            errorDiv.innerHTML = "";
-        }
+            else {
+                errorDiv.style.display = "none";
+                errorDiv.innerHTML = "";
+            }
         }
     catch(msg) {
-        // alert("catch message");
+//       alert("catch message");
         errorDiv.style.display = "block";
         errorDiv.innerHTML = msg;
         formValidity = false;
@@ -176,35 +178,40 @@ function validateDeliveryDate() {
 }
 
 // function to validate payment
-function validateDeliveryDate() {
+function validatePayment() {
     // alert("this function successfully was called and ran up until here");
-    var errorDiv = document.querySelectorAll("#deliveryDate" + " .errorMessage")[0];
-    var fieldsetValidity = true;
     var ccNumElement = document.getElementById("ccNum");
     var selectElements = document.querySelectorAll("#paymentInfo" + " select");
-    var elementCount = selectElements.length;
+    var errorDiv = document.querySelectorAll("#paymentInfo" + " .errorMessage")[0];
+    var fieldsetValidity = true;
     var cvvElement = document.getElementById("cvv");
-    var cards = document.getElementsByName("paymentType");
+    var cards = document.getElementsByName("PaymentType");
+    var elementCount = selectElements.length;
     var currentElement;
-    // this is where we were yesterday
     try {
-        
-        // loop thru the select fields looking for blanks
+        // validate radio buttons
+        if (!cards[0].checked && !cards[1].checked && !cards[2].checked && !cards[3].checked) {
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.outline = "1px solid red";
+            }
+        }
+        else {
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.outline = "";
+            }
+        }
+        // validate credit card number
+        if (ccNumElement.value === "") {
+            ccNumElement.style.background = "rgb(255,233,233)";
+            formValidity = false;
+        }
+        else {
+            ccNumElement.style.background = "white";
+        }
+        // validate expiration date
         for (var i = 0; i < elementCount; i++) {
-            
             currentElement = selectElements[i];
             // blanks
-            if (currentElement.selectedIndex === -1) {
-                // debugger;
-                currentElement.style.border = "1px solid red";
-                fieldsetValidity = false;
-            }
-            // not blanks
-            else {
-                currentElement.style.border = "";
-            }
-            // validate select list field
-            currentElement = document.querySelectorAll("#deliveryDate" + " select")[0];
             if (currentElement.selectedIndex === -1) {
                 currentElement.style.border = "1px solid red";
                 fieldsetValidity = false;
@@ -213,9 +220,19 @@ function validateDeliveryDate() {
                 currentElement.style.border = "";
             }
         }
-            // action for invalid fieldset
-            if (fieldsetValidity === false) {
-                    throw "Please specify a delivery date."
+        // validate cvv number
+        if (cvvElement.value === "") {
+            cvvElement.style.background = "rgb(255,233,233)";
+            formValidity = false;
+        }
+        else {
+            ccNumElement.style.background = "white";
+        }
+        
+            fieldsetValidity = false;
+                    // action for invalid fieldset
+        if (fieldsetValidity === false) {
+                throw "Please complete payment info.";
             }
         else {
             errorDiv.style.display = "none";
@@ -228,8 +245,39 @@ function validateDeliveryDate() {
         errorDiv.innerHTML = msg;
         formValidity = false;
     }
-}
+  }
 
+// function to validate custom message
+function validateMessage() {
+    var msgBox = document.getElementById("customText");
+    var errorDiv = document.querySelectorAll("#message" + " .errorMessage")[0];
+    var fieldsetValidity = true;
+    try {
+    // validate checkbox and textarea custom message
+    if (document.getElementById("custom").checked && (msgBox.value === "" || msgBox.value === msgBox.placeholder)) {
+        throw "Please enter your custom message text.";
+    }
+    else {
+            
+    }
+    // action for invalid fieldset
+    if (fieldsetValidity === false) {
+        // alert("if message for throw message");
+        throw "Please enter your custom message text.";
+    }
+    else {
+        errorDiv.style.display = "none";
+        errorDiv.innerHTML = "";
+    }
+    }
+    catch(msg) {
+//       alert("catch message");
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        msgBox.style.background = "rgb(255,233,233)";
+        formValidity = false;
+    }
+}
 
 // function to validate entire form
 function validateForm(evt) {
@@ -247,6 +295,8 @@ function validateForm(evt) {
     validateAddress("billingAddress");
     validateAddress("deliveryAddress");
     validateDeliveryDate();
+    validatePayment();
+    validateMessage();
     
     if (formValidity === true) { // form is valid
         document.getElementById("errorText").innerHTML = "";
@@ -284,6 +334,7 @@ function createEventListeners() {
     }
     var messageBox = document.getElementById("customText");
     if (messageBox.addEventListener) {
+        alert("if statement for aCC works");
         messageBox.addEventListener("change", autoCheckCustom, false);
     }
     else if (messageBox.attachEvent) {
