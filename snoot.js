@@ -35,7 +35,7 @@ function setUpDays() {
 
 // function to inspect custom check box on message change
 function autoCheckCustom() {
-    alert("autoCheckCustom function is called");
+//     alert("autoCheckCustom function is called");
     var messageBox = document.getElementById("customText");
     // textarea has message, check the box
     if (messageBox.value !== "" && messageBox.value !== messageBox.placeholder) {
@@ -214,7 +214,7 @@ function validatePayment() {
             // blanks
             if (currentElement.selectedIndex === -1) {
                 currentElement.style.border = "1px solid red";
-                fieldsetValidity = false;
+                formValidity = false;
             }
             else {
                 currentElement.style.border = "";
@@ -227,9 +227,7 @@ function validatePayment() {
         }
         else {
             ccNumElement.style.background = "white";
-        }
-        
-            fieldsetValidity = false;
+        }    
                     // action for invalid fieldset
         if (fieldsetValidity === false) {
                 throw "Please complete payment info.";
@@ -258,7 +256,7 @@ function validateMessage() {
         throw "Please enter your custom message text.";
     }
     else {
-            
+          msgBox.style.background = "white";  
     }
     // action for invalid fieldset
     if (fieldsetValidity === false) {
@@ -279,6 +277,52 @@ function validateMessage() {
     }
 }
 
+function validateCreateAccount() {
+    var errorDiv = document.querySelectorAll("#createAccount" + " .errorMessage")[0];
+    var usernameElement = document.getElementById("username");
+    var pass1Element = document.getElementById("pass1");
+    var pass2Element = document.getElementById("pass2");
+    var invColor = "rgb(255,233,233)";
+    var passwordMismatch = false;
+    var fieldsetValidity = true;
+    usernameElement.style.background = "white";
+    pass1Element.style.background = "white";
+    pass2Element.style.background = "white";
+    errorDiv.style.display = "none";
+    errorDiv.innerHTML = "";
+    try {
+        if (usernameElement.value !== "" && pass1Element.value !== "" && pass2Element.value !== "") { // one or more fields has data
+            if (pass1Element.value !== pass2Element.value) {
+                // verify passwords match
+                throw "Passwords entered do not match, please re-enter.";
+            }
+        }
+        else if (usernameElement.value === "" && pass1Element.value === "" && pass2Element.value === "") { // no fields have data
+            fieldsetValidity = true;
+            passwordMismatch = false;
+        }
+        else {
+            fieldsetValidity = false;
+            throw "Please enter all fields to create account.";
+        }
+    }
+    catch(msg) {
+//       alert("catch message");
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        pass1Element.style.background = invColor;
+        pass2Element.style.background = invColor;
+        formValidity = false;
+        if (passwordMismatch) {
+            usernameElement.style.background = "white";
+        }
+        else {
+            usernameElement.style.background = invColor;
+        }
+    }
+}
+
+
 // function to validate entire form
 function validateForm(evt) {
 //    alert("submit event");
@@ -297,6 +341,7 @@ function validateForm(evt) {
     validateDeliveryDate();
     validatePayment();
     validateMessage();
+    validateCreateAccount();
     
     if (formValidity === true) { // form is valid
         document.getElementById("errorText").innerHTML = "";
@@ -334,7 +379,7 @@ function createEventListeners() {
     }
     var messageBox = document.getElementById("customText");
     if (messageBox.addEventListener) {
-        alert("if statement for aCC works");
+        // alert("if statement for aCC works");
         messageBox.addEventListener("change", autoCheckCustom, false);
     }
     else if (messageBox.attachEvent) {
